@@ -32,15 +32,16 @@ public class ProcessWindow {
 	private final static int PANEL_HEIGHT = 400;
 
 	private static JTextArea taskOutput;
-	protected static JFrame frame;
+	
+	// Process execution
+	protected static final JFrame frame = new JFrame("Выполнение задачи"); 
+	
 	private static JProgressBar progressBar;
 	private static JButton button;
-	private static JButton cancelButton;
 	private boolean canceled = false;
 	private int mode = 0;
 
 	public ProcessWindow() {
-		frame = new JFrame("Выполнение задачи");
 		setIconImage();
 		frame.setMinimumSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
 
@@ -52,7 +53,8 @@ public class ProcessWindow {
 		BorderLayout layout = new BorderLayout();
 		layout.setVgap(5);
 		JComponent newContentPane = new JPanel(layout);
-		newContentPane.setOpaque(true); // content panes must be opaque
+		// content panes must be opaque
+		newContentPane.setOpaque(true); 
 
 		frame.setContentPane(newContentPane);
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -64,25 +66,20 @@ public class ProcessWindow {
 		taskOutput.setEditable(false);
 		taskOutput.setLineWrap(true);
 		taskOutput.setWrapStyleWord(true);
-
-		button = new JButton("Ждите...");
+		// Wait...
+		button = new JButton("Ждите..."); 
 
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
 				switch (mode) {
 				case 1:
 					frame.setVisible(false);
-					frame.dispose();
-					// EventQueue.invokeLater(new Runnable() {
-					// public void run() {
-					// frame.dispatchEvent(new WindowEvent(frame,
-					// WindowEvent.WINDOW_CLOSING));
-					// }
-					// });
+					frame.dispose();				
 					break;
 				case 2:
+					 // Are you sure you want to cancel the execution of the task?
 					if (JOptionPane.showConfirmDialog(frame, "Вы действительно хотите прервать выполнение задачи?",
-							cancelButton.getText(), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+							button.getText(), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 						canceled = true;
 						setMode(MODE_CLOSEABLE);
 					}
@@ -103,7 +100,7 @@ public class ProcessWindow {
 		frame.add(buttonPane, BorderLayout.PAGE_END);
 		newContentPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		// Configure and add a progress bar!
+		// Configure and add a progress bar
 		progressBar = new JProgressBar();
 		progressBar.setValue(0);
 		progressBar.setMinimum(0);
@@ -121,17 +118,18 @@ public class ProcessWindow {
 		switch (mode) {
 		case 1:
 			frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-			button.setText("Закрыть");
+			// Close
+			button.setText("Закрыть"); 
 			button.setEnabled(true);
 			break;
 		case 2:
-			button.setText("Отмена");
+			// Cancel
+			button.setText("Отмена"); 
 			button.setEnabled(true);
 			break;
 		default:
 			break;
 		}
-
 	}
 
 	public void setProgressVisible(boolean value) {
@@ -155,14 +153,22 @@ public class ProcessWindow {
 
 	}
 
-	public void showErrorMessage(String message) {
-		JOptionPane.showMessageDialog(null, message, "Ошибка", JOptionPane.ERROR_MESSAGE);
-	}
-
 	public void show() {
-		frame.setAlwaysOnTop(true);
-		frame.toFront();
+		try {
+			frame.setAlwaysOnTop(true);
+			// setAlwaysOnTop() throws java.security.AccessControlException in
+			// Lotus Notes 9.0.1 and java.lang.SecurityException in earlier
+			// versions. To fix this you must involve editing the
+			// java.policy file (found in <Notes Folder>\JVM\lib\security) on
+			// the user's machine and adding this permission:
+			// permission java.awt.AWTPermission "setWindowAlwaysOnTop";
+		} catch (java.security.AccessControlException eac) {
+			// Lotus Notes 9.0.1
+		} catch (java.lang.SecurityException es) {
+			// earlier versions
+		}
 		frame.setVisible(true);
+		frame.toFront();
 	}
 
 	public void hide() {
@@ -179,7 +185,6 @@ public class ProcessWindow {
 
 	public void print(String s) {
 		append(s);
-
 	}
 
 	public void println(String s) {
@@ -200,7 +205,11 @@ public class ProcessWindow {
 		frame.dispose();
 	}
 
-	private void setIconImage() {
+	/**
+	 * Set an image icon for window.
+	 * If the file notes.gif does not have the resources, do nothing
+	 */
+	private void setIconImage() {		
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("notes.gif");
 		if (stream != null) {
 			Image image = null;
@@ -209,8 +218,8 @@ public class ProcessWindow {
 				stream.close();
 				frame.setIconImage(image);
 			} catch (IOException e) {
-				// e.printStackTrace();
+				// do nothing
 			}
-		}
+		} // do nothing
 	}
 }
