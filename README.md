@@ -1,5 +1,7 @@
 # processwindow
 
+Java Console inplementation for run Java Agents in Lotus Notes Client environment
+
 ## Excemple 
 
 ```java
@@ -44,12 +46,11 @@ public class JavaAgent extends AgentBase {
                 pw.println(i + ". " + faker.name().fullName() + " (" + faker.internet().emailAddress() + ")");
                 // Let's wait a little bit, so it doesn't happen too fast.
                 sleep(100);
-                // Increasing the ProgressBar
-                
-                pw.setProgress(ProcessWindow.MODE_CLOSEABLE);
+                // Increasing the ProgressBar                
+                pw.setProgress(i);
                 if (pw.isCanceled()) {
                     // If the user clicks cancel, we abort the process.
-                    pw.setMode(1);
+                    pw.setMode(ProcessWindow.MODE_CLOSEABLE);
                     break;
                 }
 
