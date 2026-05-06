@@ -1,4 +1,4 @@
-# processwindow
+# Process Window
 
 Java Console inplementation for run Java Agents in Lotus Notes Client environment
 
