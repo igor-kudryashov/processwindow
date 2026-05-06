@@ -1,4 +1,4 @@
-package com.github.igor_kudryashov.processwindow;
+package com.github.ik.processwindow;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
