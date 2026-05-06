@@ -2,7 +2,7 @@
 
 Java Console inplementation for run Java Agents in Lotus Notes Client environment
 
-## Excemple 
+## Example 
 
 ```java
 import java.util.Locale;
